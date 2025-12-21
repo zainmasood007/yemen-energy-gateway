@@ -13,8 +13,9 @@ const navItems = [
   { key: 'nav.services', path: '/services' },
   { key: 'nav.products', path: '/products' },
   { key: 'nav.pylontech', path: '/pylontech' },
+  { key: 'nav.projects', path: '/projects' },
   { 
-    key: 'nav.locations', 
+    key: 'nav.locations',
     path: '/locations',
     children: [
       { key: 'صنعاء', keyEn: "Sana'a", path: '/locations/sanaa' },

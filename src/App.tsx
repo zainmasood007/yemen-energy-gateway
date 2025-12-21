@@ -10,6 +10,7 @@ import Services from "./pages/Services";
 import Products from "./pages/Products";
 import Pylontech from "./pages/Pylontech";
 import Contact from "./pages/Contact";
+import Projects from "./pages/Projects";
 import LocationPage from "./pages/LocationPage";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/products" element={<Products />} />
             <Route path="/pylontech" element={<Pylontech />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/projects" element={<Projects />} />
             <Route path="/locations/:citySlug" element={<LocationPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
