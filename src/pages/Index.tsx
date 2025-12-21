@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import Layout from '@/components/layout/Layout';
+import SEO, { organizationSchema, localBusinessSchema } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -482,8 +483,36 @@ function CTASection() {
 
 // ============ Main Page ============
 export default function Index() {
+  const { isRTL } = useLanguage();
+  
+  const homeJsonLd = [
+    organizationSchema,
+    localBusinessSchema,
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": isRTL ? "القطع للطاقة الشمسية" : "Al-Qatta Solar Energy",
+      "url": "https://alqatta.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://alqatta.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ];
+
   return (
     <Layout>
+      <SEO
+        title="Al-Qatta Solar Energy | Authorized Pylontech Agent in Yemen"
+        titleAr="القطع للطاقة الشمسية | الوكيل المعتمد لـ Pylontech في اليمن"
+        description="The only authorized Pylontech battery agent in Yemen. We provide solar energy solutions, energy storage systems, and professional installation services for homes and businesses."
+        descriptionAr="الوكيل المعتمد الوحيد لبطاريات Pylontech في اليمن. نقدم حلول الطاقة الشمسية وأنظمة تخزين الطاقة وخدمات التركيب الاحترافية للمنازل والشركات."
+        keywords="solar energy yemen, pylontech yemen, solar panels yemen, energy storage yemen, lithium batteries yemen, solar installation sana'a, off-grid solar yemen"
+        keywordsAr="طاقة شمسية اليمن، بايلونتيك اليمن، ألواح شمسية اليمن، تخزين الطاقة اليمن، بطاريات ليثيوم اليمن، تركيب طاقة شمسية صنعاء"
+        canonical="/"
+        jsonLd={homeJsonLd}
+      />
       <HeroSection />
       <StatsSection />
       <FeaturesSection />
