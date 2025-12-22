@@ -174,16 +174,34 @@
 }
 
 @layer components {
-  /* Modern Glass Card */
+  /* Modern Glass Card - Light frosted effect */
   .card-glass {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl;
-    background-image: var(--gradient-glass);
+    @apply bg-card/70 backdrop-blur-2xl border border-border/40 rounded-2xl;
+    background-image: linear-gradient(135deg, hsl(var(--card) / 0.9) 0%, hsl(var(--card) / 0.7) 100%);
+    box-shadow: 
+      0 8px 32px hsl(var(--foreground) / 0.06),
+      inset 0 1px 0 hsl(var(--background) / 0.5);
+  }
+
+  /* Glass effect for dark backgrounds */
+  .glass-dark {
+    @apply backdrop-blur-2xl border border-primary-foreground/10 rounded-2xl;
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.3) 0%, hsl(var(--primary) / 0.15) 100%);
+    box-shadow: 
+      0 8px 32px hsl(var(--foreground) / 0.1),
+      inset 0 1px 0 hsl(var(--primary-foreground) / 0.1);
+  }
+
+  /* Frosted glass panel */
+  .glass-panel {
+    @apply bg-background/60 backdrop-blur-xl border border-border/30 rounded-xl;
+    box-shadow: 0 4px 24px hsl(var(--foreground) / 0.04);
   }
 
   /* Premium Card with subtle gradient */
   .card-premium {
-    @apply bg-card border border-border rounded-2xl shadow-md;
-    background-image: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--muted) / 0.3) 100%);
+    @apply bg-card/90 backdrop-blur-sm border border-border/50 rounded-2xl shadow-md;
+    background-image: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--muted) / 0.2) 100%);
   }
 
   /* Solar glow effect */
@@ -199,8 +217,8 @@
   /* Modern grid pattern */
   .bg-grid-modern {
     background-image: 
-      linear-gradient(hsl(var(--border) / 0.4) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.4) 1px, transparent 1px);
+      linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
     background-size: 60px 60px;
   }
 
@@ -236,21 +254,39 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      hsl(var(--secondary) / 0.1) 50%,
+      hsl(var(--secondary) / 0.08) 50%,
       transparent 100%
     );
     background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+    animation: shimmer 3s infinite;
   }
 
-  /* Interactive card hover */
+  /* Interactive card hover with glass */
   .card-interactive {
-    @apply transition-all duration-500 ease-out;
+    @apply transition-all duration-500 ease-out bg-card/80 backdrop-blur-sm;
   }
 
   .card-interactive:hover {
-    @apply -translate-y-2 shadow-xl;
-    box-shadow: 0 20px 40px -12px hsl(var(--primary) / 0.15);
+    @apply -translate-y-2 bg-card/95;
+    box-shadow: 
+      0 20px 40px -12px hsl(var(--primary) / 0.12),
+      0 8px 16px -8px hsl(var(--foreground) / 0.08);
+  }
+
+  /* Parallax container */
+  .parallax-container {
+    @apply overflow-hidden relative;
+    perspective: 1000px;
+  }
+
+  /* Glass morphism button */
+  .btn-glass {
+    @apply bg-background/20 backdrop-blur-xl border border-background/30 text-foreground;
+    box-shadow: inset 0 1px 0 hsl(var(--background) / 0.3);
+  }
+
+  .btn-glass:hover {
+    @apply bg-background/30;
   }
 }
 

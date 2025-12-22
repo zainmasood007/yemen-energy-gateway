@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Wrench, Lightbulb, Cpu, Battery, Settings, BarChart3 } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { cn } from '@/lib/utils';
+import { useParallax } from '@/hooks/use-parallax';
 
 export function ServicesSection() {
   const { t, isRTL } = useLanguage();
   const Arrow = isRTL ? ArrowLeft : ArrowRight;
+  const parallaxOffset = useParallax({ speed: 0.08, direction: 'up' });
 
   const services = [
     { key: 'services.items.design', icon: Lightbulb, gradient: 'from-amber-500 to-orange-600' },
@@ -17,13 +19,22 @@ export function ServicesSection() {
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-muted/30 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-grid-modern opacity-[0.02]" />
+    <section className="py-20 md:py-28 bg-muted/20 relative overflow-hidden">
+      {/* Parallax background */}
+      <div 
+        className="absolute inset-0"
+        style={{ transform: `translateY(${parallaxOffset * 0.5}px)` }}
+      >
+        <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[80px]" />
+      </div>
+      
+      {/* Glass grid */}
+      <div className="absolute inset-0 bg-grid-modern opacity-[0.015]" />
       
       <div className="container relative">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent/10 text-accent text-sm font-semibold mb-6 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass-panel text-accent text-sm font-semibold mb-6 animate-fade-in">
             <Wrench className="h-4 w-4" />
             <span>{isRTL ? 'خدماتنا' : 'Our Services'}</span>
           </div>
@@ -38,17 +49,19 @@ export function ServicesSection() {
               key={service.key}
               to="/services"
               className={cn(
-                "group relative bg-card border border-border/50 rounded-2xl p-8 overflow-hidden",
-                "hover:shadow-elevated hover:-translate-y-2 transition-all duration-500",
+                "group relative card-glass p-8 overflow-hidden card-interactive",
                 "animate-slide-up"
               )}
               style={{ animationDelay: `${index * 80}ms` }}
             >
               {/* Hover gradient background */}
               <div className={cn(
-                "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 transition-opacity duration-500",
+                "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500",
                 service.gradient
               )} />
+              
+              {/* Shimmer on hover */}
+              <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               {/* Icon with gradient */}
               <div className={cn(
