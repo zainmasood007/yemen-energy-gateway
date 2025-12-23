@@ -27,26 +27,10 @@ export function CTASection() {
             style={{ backgroundSize: '200% 200%' }}
           />
           
-          {/* Glass texture with enhanced pattern */}
-          <div className="absolute inset-0 bg-grid-modern opacity-[0.04]" />
+          {/* Glass texture */}
+          <div className="absolute inset-0 bg-grid-modern opacity-[0.03]" />
           
-          {/* Floating particles */}
-          <div className="absolute inset-0 overflow-hidden">
-            {[...Array(15)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 bg-white/20 rounded-full animate-particle"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 8}s`,
-                  animationDuration: `${8 + Math.random() * 4}s`,
-                }}
-              />
-            ))}
-          </div>
-          
-          {/* Enhanced decorative blobs with morphing */}
+          {/* Decorative blobs */}
           <div className="absolute top-0 left-0 w-64 h-64 bg-primary-foreground/10 rounded-full blur-3xl animate-morph" />
           <div className="absolute bottom-0 right-0 w-80 h-80 bg-primary-foreground/10 rounded-full blur-3xl animate-morph" style={{ animationDelay: '-4s' }} />
           

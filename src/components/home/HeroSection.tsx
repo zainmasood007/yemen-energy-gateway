@@ -1,41 +1,10 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Sun, Shield, Clock, MapPin, Battery, Award, Sparkles, Zap, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sun, Shield, Clock, MapPin, Battery, Award, Sparkles, Zap } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useParallax } from '@/hooks/use-parallax';
 import { useEffect, useState } from 'react';
-
-// Floating particles component
-function FloatingParticles() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-2 h-2 bg-secondary/30 rounded-full animate-particle"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 8}s`,
-            animationDuration: `${8 + Math.random() * 4}s`,
-          }}
-        />
-      ))}
-      {[...Array(8)].map((_, i) => (
-        <Star
-          key={`star-${i}`}
-          className="absolute w-4 h-4 text-secondary/20 animate-pulse-soft"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 3}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 // Animated counter hook
 function useCounter(end: number, duration: number = 2000, startOnMount: boolean = true) {
@@ -80,27 +49,20 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-[95vh] flex items-center overflow-hidden">
-      {/* Animated aurora gradient background */}
+      {/* Orange gradient background */}
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary animate-aurora"
-        style={{ 
-          transform: `translateY(${bgOffset * 0.5}px)`,
-          backgroundImage: 'linear-gradient(135deg, hsl(222 47% 18%) 0%, hsl(222 50% 25%) 25%, hsl(222 47% 20%) 50%, hsl(200 50% 25%) 75%, hsl(222 47% 18%) 100%)',
-          backgroundSize: '400% 400%',
-        }}
+        className="absolute inset-0 bg-gradient-to-br from-secondary via-orange-500 to-secondary/90"
+        style={{ transform: `translateY(${bgOffset * 0.5}px)` }}
       />
-      
-      {/* Floating particles */}
-      <FloatingParticles />
       
       {/* Animated mesh gradient with parallax */}
       <div 
         className="absolute inset-0 opacity-70"
         style={{ transform: `translateY(${bgOffset * 0.3}px)` }}
       >
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[100px] animate-morph" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[80px] animate-morph" style={{ animationDelay: '-4s' }} />
-        <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-primary-foreground/5 rounded-full blur-[60px] animate-pulse-soft" />
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[100px] animate-pulse-soft" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-orange-600/20 rounded-full blur-[80px] animate-pulse-soft delay-300" />
+        <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-secondary-foreground/5 rounded-full blur-[60px]" />
       </div>
 
       {/* Glass texture overlay with enhanced pattern */}
