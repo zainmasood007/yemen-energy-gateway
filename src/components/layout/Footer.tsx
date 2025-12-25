@@ -12,6 +12,7 @@ export default function Footer() {
     { key: 'nav.about', path: '/about' },
     { key: 'nav.products', path: '/products' },
     { key: 'nav.pylontech', path: '/pylontech' },
+    { name: { ar: 'الأسعار', en: 'Pricing' }, path: '/pricing' },
     { key: 'nav.knowledge', path: '/knowledge' },
     { key: 'nav.contact', path: '/contact' },
   ];
@@ -83,7 +84,7 @@ export default function Footer() {
                     to={link.path}
                     className="text-sm opacity-70 hover:opacity-100 hover:text-secondary transition-all duration-300 hover:translate-x-1 rtl:hover:-translate-x-1 inline-block"
                   >
-                    {t(link.key)}
+                    {'key' in link ? t(link.key) : (isRTL ? link.name.ar : link.name.en)}
                   </Link>
                 </li>
               ))}

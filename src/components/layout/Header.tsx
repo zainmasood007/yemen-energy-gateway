@@ -30,6 +30,7 @@ const navItems = [
     ]
   },
   { key: 'nav.knowledge', path: '/knowledge' },
+  { keyAr: 'الأسعار', keyEn: 'Pricing', path: '/pricing' },
   { key: 'nav.contact', path: '/contact' },
 ];
 
@@ -109,7 +110,7 @@ export default function Header() {
                     : "text-foreground/70 hover:text-foreground hover:bg-muted/80"
                 )}
               >
-                {t(item.key)}
+                {'key' in item ? t(item.key) : (isRTL ? item.keyAr : item.keyEn)}
               </Link>
             )
           ))}
@@ -195,7 +196,7 @@ export default function Header() {
                     : "text-foreground/70 hover:text-foreground hover:bg-muted/80"
                 )}
               >
-                {t(item.key)}
+                {'key' in item ? t(item.key) : (isRTL ? item.keyAr : item.keyEn)}
               </Link>
             )
           ))}

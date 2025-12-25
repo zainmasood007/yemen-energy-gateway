@@ -75,70 +75,36 @@ export default function ProductPage() {
     { name: isRTL ? product.nameAr : product.nameEn, url: `/products/${category}/${slug}` },
   ]);
 
-  // Calculate average Yemen suitability rating for aggregate rating
-  const avgYemenRating = (
-    product.yemenSuitability.ratings.heatResistance +
-    product.yemenSuitability.ratings.coastalSuitability +
-    product.yemenSuitability.ratings.powerOutageSupport +
-    product.yemenSuitability.ratings.dustResistance
-  ) / 4;
-
-  // Advanced Product Schema with offers, ratings
+  // Advanced Product Schema - Google Compliant (NO fake reviews)
   const productSchema = createAdvancedProductSchema({
     name: product.nameEn,
     nameAr: product.nameAr,
     description: product.seoDescriptionEn,
     descriptionAr: product.seoDescriptionAr,
-    image: product.image !== '/placeholder.svg' ? `https://alqatta.com${product.image}` : undefined,
+    image: product.image,
     brand: product.brand,
     model: product.model,
     category: categoryData.nameEn,
     sku: product.id,
     url: `/products/${category}/${slug}`,
     isAvailable: product.isAvailable,
-    aggregateRating: {
-      ratingValue: Math.round(avgYemenRating * 10) / 10,
-      reviewCount: product.faqs.length + 5, // FAQs + base reviews
-      bestRating: 5,
-      worstRating: 1,
-    },
-    reviews: [
-      {
-        author: isRTL ? 'عميل من صنعاء' : 'Customer from Sanaa',
-        datePublished: '2024-10-15',
-        reviewBody: isRTL 
-          ? `${product.brand} ${product.model} منتج ممتاز ويعمل بكفاءة عالية في ظروف اليمن`
-          : `${product.brand} ${product.model} is an excellent product that works efficiently in Yemen conditions`,
-        ratingValue: 5,
-      },
-      {
-        author: isRTL ? 'مؤسسة القطع' : 'Al-Qatta Team',
-        datePublished: '2024-11-01',
-        reviewBody: isRTL
-          ? 'منتج معتمد ومختبر من فريقنا التقني، مع ضمان الوكيل الرسمي'
-          : 'Certified and tested product by our technical team, with official dealer warranty',
-        ratingValue: 5,
-      },
-    ],
+    // Yemen Suitability as additionalProperty (Google compliant)
+    yemenSuitability: product.yemenSuitability.ratings,
+    // Key specifications as additionalProperty
+    specifications: product.specifications.slice(0, 6).map(spec => ({
+      name: isRTL ? spec.keyAr : spec.keyEn,
+      value: spec.value,
+      unit: spec.unit,
+    })),
   });
 
-  // FAQ Schema from product FAQs (all questions for both languages for better SEO)
-  const faqSchemaAr = createFAQSchema(
+  // FAQ Schema - current language only (to avoid mixing languages)
+  const faqSchema = createFAQSchema(
     product.faqs.map(faq => ({
-      question: faq.questionAr,
-      answer: faq.answerAr,
+      question: isRTL ? faq.questionAr : faq.questionEn,
+      answer: isRTL ? faq.answerAr : faq.answerEn,
     }))
   );
-  
-  const faqSchemaEn = createFAQSchema(
-    product.faqs.map(faq => ({
-      question: faq.questionEn,
-      answer: faq.answerEn,
-    }))
-  );
-  
-  // Use current language FAQ schema
-  const faqSchema = isRTL ? faqSchemaAr : faqSchemaEn;
 
   return (
     <Layout>

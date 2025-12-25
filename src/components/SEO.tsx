@@ -191,7 +191,67 @@ export const createBreadcrumbSchema = (items: { name: string; url: string }[]) =
   }))
 });
 
-// Advanced Product Schema with offers, ratings, and reviews
+// Helper to remove undefined/null values from objects (for clean JSON-LD)
+const cleanObject = (obj: Record<string, any>): Record<string, any> => {
+  const cleaned: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value !== undefined && value !== null && value !== '') {
+      if (typeof value === 'object' && !Array.isArray(value)) {
+        const cleanedNested = cleanObject(value);
+        if (Object.keys(cleanedNested).length > 0) {
+          cleaned[key] = cleanedNested;
+        }
+      } else if (Array.isArray(value)) {
+        const cleanedArray = value.map(item => 
+          typeof item === 'object' ? cleanObject(item) : item
+        ).filter(item => item !== undefined && item !== null);
+        if (cleanedArray.length > 0) {
+          cleaned[key] = cleanedArray;
+        }
+      } else {
+        cleaned[key] = value;
+      }
+    }
+  }
+  return cleaned;
+};
+
+// Yemen Suitability ratings as PropertyValue (Google compliant)
+interface YemenSuitabilityRatings {
+  heatResistance: number;
+  coastalSuitability: number;
+  dustResistance: number;
+  powerOutageSupport: number;
+}
+
+const createYemenSuitabilityProperties = (ratings: YemenSuitabilityRatings) => [
+  {
+    "@type": "PropertyValue",
+    "name": "Heat Resistance Rating",
+    "value": `${ratings.heatResistance}/5`,
+    "unitText": "out of 5"
+  },
+  {
+    "@type": "PropertyValue",
+    "name": "Coastal Suitability Rating",
+    "value": `${ratings.coastalSuitability}/5`,
+    "unitText": "out of 5"
+  },
+  {
+    "@type": "PropertyValue",
+    "name": "Dust Resistance Rating",
+    "value": `${ratings.dustResistance}/5`,
+    "unitText": "out of 5"
+  },
+  {
+    "@type": "PropertyValue",
+    "name": "Power Outage Support Rating",
+    "value": `${ratings.powerOutageSupport}/5`,
+    "unitText": "out of 5"
+  }
+];
+
+// Advanced Product Schema - Google Compliant (NO fake reviews/ratings)
 export const createAdvancedProductSchema = (product: {
   name: string;
   nameAr?: string;
@@ -204,90 +264,77 @@ export const createAdvancedProductSchema = (product: {
   sku?: string;
   url?: string;
   isAvailable?: boolean;
-  aggregateRating?: {
-    ratingValue: number;
-    reviewCount: number;
-    bestRating?: number;
-    worstRating?: number;
-  };
-  reviews?: Array<{
-    author: string;
-    datePublished: string;
-    reviewBody: string;
-    ratingValue: number;
-  }>;
-}) => ({
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": product.name,
-  "alternateName": product.nameAr,
-  "description": product.description,
-  "image": product.image || "https://alqatta.com/placeholder.svg",
-  "brand": {
-    "@type": "Brand",
-    "name": product.brand || "Al-Qatta"
-  },
-  "manufacturer": {
-    "@type": "Organization",
-    "name": product.brand || "Al-Qatta"
-  },
-  "model": product.model,
-  "sku": product.sku || product.model,
-  "category": product.category || "Solar Energy Equipment",
-  "url": product.url ? `https://alqatta.com${product.url}` : undefined,
-  "offers": {
-    "@type": "Offer",
-    "availability": product.isAvailable !== false 
-      ? "https://schema.org/InStock" 
-      : "https://schema.org/OutOfStock",
-    "priceCurrency": "USD",
-    "priceValidUntil": new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    "itemCondition": "https://schema.org/NewCondition",
-    "seller": {
+  yemenSuitability?: YemenSuitabilityRatings;
+  specifications?: Array<{ name: string; value: string; unit?: string }>;
+}) => {
+  const schema: Record<string, any> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "alternateName": product.nameAr,
+    "description": product.description,
+    "image": product.image && product.image !== '/placeholder.svg' 
+      ? (product.image.startsWith('http') ? product.image : `https://alqatta.com${product.image}`)
+      : undefined,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand
+    },
+    "manufacturer": product.brand ? {
       "@type": "Organization",
-      "name": "Al-Qatta Solar Energy",
-      "url": "https://alqatta.com"
-    },
-    "shippingDetails": {
-      "@type": "OfferShippingDetails",
-      "shippingDestination": {
-        "@type": "DefinedRegion",
-        "addressCountry": "YE"
-      }
-    },
-    "hasMerchantReturnPolicy": {
-      "@type": "MerchantReturnPolicy",
-      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-      "merchantReturnDays": 30
-    }
-  },
-  ...(product.aggregateRating && {
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": product.aggregateRating.ratingValue,
-      "reviewCount": product.aggregateRating.reviewCount,
-      "bestRating": product.aggregateRating.bestRating || 5,
-      "worstRating": product.aggregateRating.worstRating || 1
-    }
-  }),
-  ...(product.reviews && product.reviews.length > 0 && {
-    "review": product.reviews.map(review => ({
-      "@type": "Review",
-      "author": {
-        "@type": "Person",
-        "name": review.author
+      "name": product.brand
+    } : undefined,
+    "model": product.model,
+    "sku": product.sku || product.model,
+    "category": product.category || "Solar Energy Equipment",
+    "url": product.url ? `https://alqatta.com${product.url}` : undefined,
+    "offers": {
+      "@type": "Offer",
+      "availability": product.isAvailable !== false 
+        ? "https://schema.org/InStock" 
+        : "https://schema.org/OutOfStock",
+      "itemCondition": "https://schema.org/NewCondition",
+      "url": product.url ? `https://alqatta.com${product.url}` : undefined,
+      "seller": {
+        "@type": "Organization",
+        "name": "Al-Qatta Solar Energy",
+        "url": "https://alqatta.com"
       },
-      "datePublished": review.datePublished,
-      "reviewBody": review.reviewBody,
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": review.ratingValue,
-        "bestRating": 5,
-        "worstRating": 1
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": "YE"
+        }
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 30
       }
-    }))
-  })
-});
+    },
+    // Yemen Suitability as additionalProperty (compliant way)
+    "additionalProperty": product.yemenSuitability 
+      ? createYemenSuitabilityProperties(product.yemenSuitability)
+      : undefined
+  };
+
+  // Add specifications as additionalProperty if provided
+  if (product.specifications && product.specifications.length > 0) {
+    const specProperties = product.specifications.map(spec => ({
+      "@type": "PropertyValue",
+      "name": spec.name,
+      "value": spec.unit ? `${spec.value} ${spec.unit}` : spec.value
+    }));
+    
+    schema.additionalProperty = [
+      ...(schema.additionalProperty || []),
+      ...specProperties
+    ];
+  }
+
+  return cleanObject(schema);
+};
 
 // Simple Product Schema (backward compatibility)
 export const createProductSchema = (product: {
