@@ -29,6 +29,7 @@ import {
   MessageCircle,
   Info,
   Sparkles,
+  FileText,
 } from "lucide-react";
 import {
   calculateSizing,
@@ -44,6 +45,7 @@ import {
 } from "@/lib/solarSizingEngine";
 import { PageHero } from "@/components/ui/PageHero";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import QuoteDialog from "@/components/QuoteDialog";
 
 const systemTypeConfig = {
   home: {
@@ -110,6 +112,9 @@ export default function Calculator() {
   const [agrInch, setAgrInch] = useState(2);
   const [agrCableType, setAgrCableType] = useState<CableType>("copper");
   const [agrPumpConsumption, setAgrPumpConsumption] = useState(0);
+
+  // Quote Dialog
+  const [quoteDialogOpen, setQuoteDialogOpen] = useState(false);
 
   const panel = useMemo(
     () => PANEL_OPTIONS.find((p) => p.id === panelId) ?? PANEL_OPTIONS[0],
@@ -457,19 +462,21 @@ export default function Calculator() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label>{isRTL ? "استخدام بطاريات" : "Use Batteries"}</Label>
-                          <Select value={comUsesBattery} onValueChange={(v) => setComUsesBattery(v as YesNo)}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="yes">{isRTL ? "نعم" : "Yes"}</SelectItem>
-                              <SelectItem value="no">{isRTL ? "لا" : "No"}</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                      <div className="space-y-2">
+                        <Label>{isRTL ? "استخدام بطاريات" : "Use Batteries"}</Label>
+                        <Select value={comUsesBattery} onValueChange={(v) => setComUsesBattery(v as YesNo)}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="yes">{isRTL ? "نعم" : "Yes"}</SelectItem>
+                            <SelectItem value="no">{isRTL ? "لا" : "No"}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Battery Type - Only show when batteries are selected */}
+                      {comUsesBattery === "yes" && (
                         <div className="space-y-2">
                           <Label>{isRTL ? "نوع البطارية" : "Battery Type"}</Label>
                           <Select value={comBatteryType} onValueChange={(v) => setComBatteryType(v as BatteryType)}>
@@ -485,7 +492,7 @@ export default function Calculator() {
                             </SelectContent>
                           </Select>
                         </div>
-                      </div>
+                      )}
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
@@ -739,13 +746,23 @@ export default function Calculator() {
 
                   {/* CTA Buttons */}
                   <div className="pt-4 space-y-3">
-                    <Button asChild className="w-full bg-gradient-solar text-secondary-foreground hover:opacity-90">
+                    {/* Generate Quote PDF Button */}
+                    <Button
+                      className="w-full bg-gradient-solar text-secondary-foreground hover:opacity-90"
+                      onClick={() => setQuoteDialogOpen(true)}
+                    >
+                      <FileText className="h-4 w-4 me-2" />
+                      {isRTL ? "تحميل عرض سعر PDF" : "Download Quote PDF"}
+                    </Button>
+                    
+                    <Button asChild variant="outline" className="w-full">
                       <a href="https://wa.me/967777800063" target="_blank" rel="noopener noreferrer">
                         <MessageCircle className="h-4 w-4 me-2" />
-                        {isRTL ? "طلب عرض سعر مفصل" : "Request Detailed Quote"}
+                        {isRTL ? "تواصل عبر واتساب" : "Contact via WhatsApp"}
                       </a>
                     </Button>
-                    <Button asChild variant="outline" className="w-full">
+                    
+                    <Button asChild variant="ghost" className="w-full">
                       <Link to="/products">
                         {isRTL ? "استكشف منتجاتنا" : "Explore Products"}
                         {isRTL ? <ChevronLeft className="h-4 w-4 ms-2" /> : <ChevronRight className="h-4 w-4 ms-2" />}
@@ -802,6 +819,13 @@ export default function Calculator() {
           </ScrollReveal>
         </div>
       </section>
+      {/* Quote Dialog */}
+      <QuoteDialog
+        open={quoteDialogOpen}
+        onOpenChange={setQuoteDialogOpen}
+        result={result}
+        systemType={systemType}
+      />
     </Layout>
   );
 }
