@@ -82,10 +82,11 @@ export default function Header() {
                   <ChevronDown className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180" />
                 </button>
                 <div className="absolute top-full start-0 mt-2 bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-elevated opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 min-w-[180px] py-2 overflow-hidden">
-                  {item.children.map((child, idx) => (
+                {item.children.map((child, idx) => (
                     <Link
                       key={child.path}
                       to={child.path}
+                      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                       className={cn(
                         "block px-4 py-2.5 text-sm hover:bg-muted/80 transition-all duration-200",
                         idx === 0 && "font-medium border-b border-border/50 mb-1"
@@ -97,9 +98,10 @@ export default function Header() {
                 </div>
               </div>
             ) : (
-              <Link
+            <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className={cn(
                   "px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-300",
                   location.pathname === item.path
@@ -167,7 +169,10 @@ export default function Header() {
                     <Link
                       key={child.path}
                       to={child.path}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
                       className="block px-4 py-2.5 text-sm text-foreground/60 hover:text-foreground transition-colors"
                     >
                       {isRTL ? child.key : child.keyEn}
@@ -179,7 +184,10 @@ export default function Header() {
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className={cn(
                   "px-4 py-3.5 text-sm font-medium rounded-xl transition-all duration-300",
                   location.pathname === item.path
