@@ -1,13 +1,6 @@
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 import type { BaseResult } from "./solarSizingEngine";
-
-// Extend jsPDF type for autotable
-declare module "jspdf" {
-  interface jsPDF {
-    autoTable: (options: any) => jsPDF;
-  }
-}
 
 export interface QuoteCustomer {
   name: string;
@@ -256,7 +249,7 @@ export function generateQuotePdf(data: QuoteData): void {
   ]);
 
   // Products table
-  doc.autoTable({
+  autoTable(doc, {
     startY: yPos,
     head: [["No", "Description", "Unit", "Qty", "Unit Price ($)", "Total ($)"]],
     body: tableData,
