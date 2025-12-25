@@ -360,6 +360,7 @@ Specifically designed for hot environments, the US5000 is the optimal choice for
 
     image: '/placeholder.svg',
     gallery: [],
+    datasheetUrl: '/datasheets/pylontech-us-series.pdf',
     
     isAvailable: true,
     isFeatured: true,
@@ -543,6 +544,7 @@ Ideal for cars, boats, caravans, and small solar systems.`,
 
     image: '/placeholder.svg',
     gallery: [],
+    datasheetUrl: '/datasheets/pylontech-rv12100.pdf',
     
     isAvailable: true,
     isFeatured: false,
@@ -732,6 +734,7 @@ Light and powerful - ideal for camping, road trips, and power outages.`,
 
     image: '/placeholder.svg',
     gallery: [],
+    datasheetUrl: '/datasheets/pylontech-up5000-manual.pdf',
     
     isAvailable: true,
     isFeatured: false,
